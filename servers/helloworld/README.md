@@ -78,7 +78,7 @@ gcloud run deploy $SERVICE_NAME --image us-docker.pkg.dev/$PROJECT/grpcdemo/$SER
 
 Test the deployed service.
 ```shell
-grpcurl -import-path ./protos -proto helloworld.proto -d '{"name":"Guest"}' helloworld-grpc-l3jikl46na-uc.a.run.app:443 helloworld.Greeter/SayHello
+grpcurl -import-path ./protos -proto helloworld.proto -d '{"name":"Guest"}' YOUR_HOSTNAME:443 helloworld.Greeter/SayHello
 ```
 
 ## Update Apigee LB to accept GRPC traffic
