@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install grpcio protobuf
+RUN pip install grpcio protobuf grpcio-tools
 
 
 EXPOSE 50051

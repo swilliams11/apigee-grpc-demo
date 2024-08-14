@@ -12,7 +12,7 @@
 ## Run in Container Locally
 ### Build the Docker Image
 ```shell
-docker build helloworld/ -t grpc-helloworld:v1
+docker build helloworld/ -t grpc-helloworld:v2
 docker images -a 
 export DOCKER_IMAGE=<imageid>
 ```
@@ -65,15 +65,18 @@ gcloud auth configure-docker us-docker.pkg.dev
 ```
 
 ```shell
-export REGION=us-central1
+export REGION=us-west1
 export SERVICE_NAME=helloworld-grpc
 export PROJECT=PROJECT
 docker tag $DOCKER_IMAGE us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME
 
 docker push us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME
 
+# Unauthenticated
 gcloud run deploy $SERVICE_NAME --image us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME --platform managed --use-http2 --allow-unauthenticated --region $REGION --port 50051
 
+# Authenticated
+gcloud run deploy $SERVICE_NAME --image us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME --platform managed --use-http2 --region $REGION --port 50051
 ```
 
 Test the deployed service.
@@ -81,7 +84,14 @@ Test the deployed service.
 grpcurl -import-path ./protos -proto helloworld.proto -d '{"name":"Guest"}' YOUR_HOSTNAME:443 helloworld.Greeter/SayHello
 ```
 
-## Update Apigee LB to accept GRPC traffic
+## Google Cloud Load Balancer
+You can either update an existing GCLB to accept gRPC traffic or you can 
+create a new Load Balancer. 
+
+
+### Update Apigee LB to accept GRPC traffic
+You can perform the following steps from the gcloud cli or you can 
+complete them in the Google Cloud Console.
 
 1. Get the forwarding rules in your project. 
 ```shell
@@ -102,7 +112,7 @@ gcloud compute target-https-proxies describe $TARGET_PROXY
 
 Shell Output
 ```shell
-slCertificates:
+sslCertificates:
 - https://www.googleapis.com/compute/v1/projects/PROJECT/global/sslCertificates/apigee-ssl-cert
 tlsEarlyData: DISABLED
 urlMap: https://www.googleapis.com/compute/v1/projects/PROJECT/global/urlMaps/apigee-proxy-url-map
@@ -148,4 +158,106 @@ gcloud compute backend-services create apigee-grpc \
 gcloud compute network-endpoint-groups list
 ```
 
-10. 
+10. Update the backend service to the Apigee NEG.
+TODO add alternative to add VM instance group Backend as well. 
+
+```shell
+export APIGEE_NEG=<NAME from above>
+gcloud compute backend-services add-backend apigee-grpc \
+  --network-endpoint-group=$APIGEE_NEG \
+  --network-endpoint-group-region=<LOCATION from above> \
+  --global --project=$PROJECT
+```
+
+11. Get the URL Map and edit it.
+```shell
+gcloud compute url-maps edit $URL_MAP
+```
+
+```yaml
+hostRules:
+- hosts:
+  - YOUR_DOMAIN_NAME
+  pathMatcher: grpc-domain
+name: apigee-lb
+pathMatchers:
+- defaultService: https://www.googleapis.com/compute/v1/projects/<PROJECT_ID>/global/backendServices/apigee-grpc
+  name: grpc-domain
+```
+
+12. Update the Apigee Environment Group to include the new grpc domain. 
+
+13. Create a Target Server in Apigee that supports the GRPC protocol and use the hostname from the Cloud Run server you deployed earlier.
+    * Target server name: `grpc-hello`
+    * gRPC - Target
+    * Port: 443
+    * Enable SSL: True
+
+14. Create an Apigee proxy named `grpc-proxy`.
+    You can include any domain name as the Target Server because you will override it with the code below.
+
+    ```xml
+    <HTTPTargetConnection>
+    <LoadBalancer>
+      <Server name="grpc-hello"/>
+    </LoadBalancer>
+    <Path>/helloworld.Greeter/SayHello</Path>
+  </HTTPTargetConnection>
+
+    ```
+
+    ```xml
+    <Authentication>
+      <GoogleIDToken>
+        <Audience>https://YOURCLOUDRUNDOMAIN</Audience>
+      </GoogleIDToken>
+    </Authentication>
+    ```
+
+15. When you deploy the proxy, you have to deploy it with a Service Account that has the Cloud Run Invoker role. 
+
+16. You also need to complete the following if you haven't done so already.
+    * Create an Internal Regional Application Load Balancer for the Cloud Run service
+    * Publish the service with PSC and use the ILB as the backend
+    * Create a Service Endpoint Attachment in Apigee and refer to the service you just published
+    * You can create a DNS entry in Cloud DNS and give it the private IP address  of the Service Endpint Attachment.
+    * Flow is Apigee Runtime -> Endpoint Point Attachment -> ILB - Cloud Run
+
+17. Test the Apigee proxy.  This assumes that you have disabled the Verify API Policy in the Preflow.
+
+```shell
+export APIGEE_GRPC_HOST=YOUR_PROXY
+grpcurl -import-path ../protos -proto helloworld.proto -d '{"name":"Guest"}' $APIGEE_GRPC_HOST:443 helloworld.Greeter/SayHello
+```
+
+### Create a new LB to accept GRPC traffic
+1. Create the frontend LB with protocol HTTPS. 
+2. Create an SSL certificate
+3. Make sure to register the domain name in Cloud DNS and create an A record with the IP address of the LB.
+4. For the backend configuration make sure to select HTTP/2 for the protocol.
+5. The Host and path rules can be set to the default values.
+
+
+## Secure the Apigee Proxy
+1. The proxy has the Verify API Key Policy requesting that the API Key is passed into the `apikey` header.
+
+2. Create an Apigee Product and Developer App.
+    * Service Name: `helloworld.Greeter`
+    * Method: `SayHello`
+
+
+3. Test the proxy.
+```shell
+export APIGEE_GRPC_HOST=YOUR_PROXY
+export APIKEY=YOURKEY
+grpcurl -import-path ../protos -proto helloworld.proto -H "apikey: $APIKEY" -d '{"name":"Guest"}' $APIGEE_GRPC_HOST:443 helloworld.Greeter/SayHello
+```
+
+## Update the GRPC Code
+Update the GRPC code if you get warnings or errors in the Cloud Run logs stating that the version of the proto doesn't 
+match the GRPC version of the environment.
+
+```shell
+python -m grpc_tools.protoc -I../protos --python_out=. --pyi_out=. --grpc_python_out=. ../protos/helloworld.proto
+
+```

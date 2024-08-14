@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="8" name="grpc-proxy">
+  <DisplayName/>
+  <Description/>
+  <CreatedAt>1723557340326</CreatedAt>
+  <LastModifiedAt>1723557340326</LastModifiedAt>
+  <BasePaths>/helloworld.Greeter/SayHello</BasePaths>
+  <Policies>
+    <Policy>VA-VerifyAPIKey</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <TargetEndpoints>
+    <TargetEndpoint>default</TargetEndpoint>
+  </TargetEndpoints>
+</APIProxy>
