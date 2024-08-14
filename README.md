@@ -10,3 +10,7 @@ The repository demonstrates how to deploy a gRPC enabled Apigee proxy to Apigee 
 
 1. [Create the gRPC target server in Cloud Run](./servers/README.md).
 2. [Create the Apigee Proxy, Target Server, API product, App](./apigee_proxies/helloworld_grpc/README.md)
+
+## TODOS
+* Automate deployment of all Apigee configuration items with a shell script
+* Automate Cloud Run, Cloud Load Balancer config with Terraform
