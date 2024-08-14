@@ -56,3 +56,12 @@ apigeecli products create -o $ORG -e $ENV -m helloworld-grpc --grpcopgrp ./confi
 ```shell
 apigeecli apps create -o $ORG -t $token -e $DEV -n grpc-app-test -p helloworld-grpc
 ```
+
+## Test the proxy
+```shell
+cd ../..
+
+export APIGEE_GRPC_HOST=YOUR_PROXY
+export APIKEY=YOURKEY
+grpcurl -import-path ../../servers/protos -proto helloworld.proto -H "apikey: $APIKEY" -d '{"name":"Guest"}' $APIGEE_GRPC_HOST:443 helloworld.Greeter/SayHello
+```
