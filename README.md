@@ -6,6 +6,10 @@ The repository demonstrates how to deploy a gRPC enabled Apigee proxy to Apigee 
 * A sample developer
 * Sample Developer App
 
+## Prerequisites
+* Install [apigeecli](https://github.com/apigee/apigeecli/tree/main)
+* Install [grpcurl](https://github.com/fullstorydev/grpcurl)
+
 ## Documentation
 
 1. [Create the gRPC target server in Cloud Run](./servers/README.md).

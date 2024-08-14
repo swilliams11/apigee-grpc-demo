@@ -2,7 +2,8 @@
 
 
 ## Prerequisites
-Install [apigeecli](https://github.com/apigee/apigeecli/tree/main)
+* Install [apigeecli](https://github.com/apigee/apigeecli/tree/main)
+* Install [grpcurl](https://github.com/fullstorydev/grpcurl)
 
 ## Deploy the Target Server
 This will create a target server in the Apigee Environment with TLS enabled.  
