@@ -1,0 +1,11 @@
+{
+	"developer": [
+		{
+			"email": "grpc-developer@example.com",
+			"firstName": "Sample",
+			"lastName": "Developer",
+			"userName": "sample",
+			"status": "active"
+		}
+	]
+}

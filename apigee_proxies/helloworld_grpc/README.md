@@ -14,6 +14,7 @@ cd helloworld_grpc
 export ORG=YOUR_ORG
 export ENV=YOUR_ENV
 token=$(gcloud auth print-access-token)
+
 apigeecli targetservers import -o $ORG -e $ENV -f config/targetservers.json -t $token
 
 ```
@@ -33,7 +34,25 @@ export ENV=YOUR_ENV
 export SA=YOUR_SA
 export PROXY_NAME=PROXY_NAME
 token=$(gcloud auth print-access-token)
+
 apigeecli apis import -o $ORG -f helloworld_gprc_delete.zip -t $token
 apigeecli apis deploy -o $ORG -e $ENV -n $PROXY_NAME --sa $SA -t $token
 ```
 
+## Deploy the Developer
+export DEV=grpc-developer@example.com
+
+```shell
+apigeecli developers create -o $ORG -n $DEV -f sample -s developer -u grpc-developer@example.com
+```
+
+## Deploy the Apigee Product
+```shell
+apigeecli products create -o $ORG -e $ENV -m helloworld-grpc --grpcopgrp ./config/grpc_opsgroup.json -n helloworld-grpc -t $token --approval auto
+```
+
+
+## Deploy the Apigee Developer App
+```shell
+apigeecli apps create -o $ORG -t $token -e $DEV -n grpc-app-test -p helloworld-grpc
+```

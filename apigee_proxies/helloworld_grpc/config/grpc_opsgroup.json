@@ -1,0 +1,12 @@
+{
+    "operationConfigs": [
+      {
+        "apiSource": "grpc-proxy",
+        "methods": [
+          "SayHello"
+        ],
+        "quota": {},
+        "service": "helloworld.Greeter"
+      }
+    ]
+  }
