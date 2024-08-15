@@ -96,5 +96,7 @@ cd ../..
 
 export APIGEE_GRPC_HOST=YOUR_PROXY
 export APIKEY=YOURKEY
-grpcurl -import-path ../../servers/protos -proto helloworld.proto -H "apikey: $APIKEY" -d '{"name":"Guest"}' $APIGEE_GRPC_HOST:443 helloworld.Greeter/SayHello
+grpcurl -import-path ../../servers/protos -proto helloworld.proto \
+-H "apikey: $APIKEY" \
+-d '{"name":"Guest"}' $APIGEE_GRPC_HOST:443 helloworld.Greeter/SayHello
 ```
