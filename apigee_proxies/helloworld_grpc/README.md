@@ -7,8 +7,11 @@ This documentation describes how to setup Apigee X to accept gRPC requests.
 * Deploy the sample developer
 * Create an Apigee Product
 * Create an Apigee Developer App
-* Test the Apigee Proxy via the Google Cloud Load Balancer
 * Configure an Endpoint Attachment
+* Add a DNS entry in Cloud DNS
+* Create a DNS Peering Zone
+* Update the Apigee Enviornment Group with the new gRPC host name.
+* Test the Apigee Proxy via the Google Cloud Load Balancer
 
 
 ## Prerequisites
