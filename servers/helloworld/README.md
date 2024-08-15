@@ -12,6 +12,7 @@
 ## Run in Container Locally
 ### Build the Docker Image
 ```shell
+cd servers
 docker build helloworld/ -t grpc-helloworld:v2
 docker images -a 
 export DOCKER_IMAGE=<imageid>
@@ -23,8 +24,11 @@ docker run -p 8080:50051 -d $DOCKER_IMAGE
 ```
 
 ### Test the GRPC Server
+Execute this from the `servers` directory.
+
 ```shell
 cd servers
+
 grpcurl -plaintext -import-path ../protos -proto helloworld.proto -d '{"name":"Guest"}' localhost:8080 helloworld.Greeter/SayHello
 ```
 
@@ -50,7 +54,7 @@ python greeter_client.py
 
 
 ## Upload Container to Google Cloud Artifactory
-Create an Artifact repo.
+1. Create an Artifact repo.
 ```shell
 gcloud artifacts repositories create grpcdemo \
     --repository-format=Docker \
@@ -59,11 +63,12 @@ gcloud artifacts repositories create grpcdemo \
 ```
 
 
-Configure Auth Credential Helper for Google Cloud.
+2. Configure Auth Credential Helper for Google Cloud.
 ```shell
 gcloud auth configure-docker us-docker.pkg.dev
 ```
 
+3. Set environment variables and push the Docker images to Artifactory.
 ```shell
 export REGION=us-west1
 export SERVICE_NAME=helloworld-grpc
@@ -71,27 +76,36 @@ export PROJECT=PROJECT
 docker tag $DOCKER_IMAGE us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME
 
 docker push us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME
+```
 
-# Unauthenticated
+4. Execute one of the following deployment commands. The first one will configure Cloud Run
+to allow unauthenticated clients, and the second command will force all clients to pass a valid 
+Authorization header.  
+
+```shell
+# Unauthenticated - Allow Cloud Run to accept all requests from all clients
 gcloud run deploy $SERVICE_NAME --image us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME --platform managed --use-http2 --allow-unauthenticated --region $REGION --port 50051
 
-# Authenticated
+# Authenticated - Clients must include an Authorization header on every request
 gcloud run deploy $SERVICE_NAME --image us-docker.pkg.dev/$PROJECT/grpcdemo/$SERVICE_NAME --platform managed --use-http2 --region $REGION --port 50051
 ```
 
-Test the deployed service.
+5. Test the deployed service.  Execute this command from the `servers` folder. 
+**Do not** include the `https://` when you export the `ClOUDRUN_HOSTNAME` environment variable. 
+
 ```shell
-grpcurl -import-path ./protos -proto helloworld.proto -d '{"name":"Guest"}' YOUR_HOSTNAME:443 helloworld.Greeter/SayHello
+export CLOUDRUN_HOSTNAME=CR_HOST
+grpcurl -import-path ./protos -proto helloworld.proto -d '{"name":"Guest"}' $CLOUDRUN_HOSTNAME:443 helloworld.Greeter/SayHello
 ```
 
-## Google Cloud Load Balancer
+## Google Cloud Load Balancer (GCLB)
 You can either update an existing GCLB to accept gRPC traffic or you can 
 create a new Load Balancer. 
 
 
-### Update Apigee LB to accept GRPC traffic
-You can perform the following steps from the gcloud cli or you can 
-complete them in the Google Cloud Console.
+### Update Apigee LB to accept gRPC traffic
+You can perform the following steps from the gcloud cli (steps shown below) or you can 
+complete them in the Google Cloud Console (documentation not included here).
 
 1. Get the forwarding rules in your project. 
 ```shell
@@ -185,79 +199,38 @@ pathMatchers:
   name: grpc-domain
 ```
 
-12. Update the Apigee Environment Group to include the new grpc domain. 
+#### You must expose the Cloud Run service to the Apigee X Runtime
+You also need to complete the following if you haven't done so already.
+* Create an Internal Regional Application Load Balancer (IRALB) for the Cloud Run service
+* Publish the service with Private Service Connect and use the IRALB as the backend
 
-13. Create a Target Server in Apigee that supports the GRPC protocol and use the hostname from the Cloud Run server you deployed earlier.
-    * Target server name: `grpc-hello`
-    * gRPC - Target
-    * Port: 443
-    * Enable SSL: True
+Request flow is client -> Apigee GLB -> Apigee Runtime -> Endpoint Point Attachment -> IRALB -> Cloud Run
 
-14. Create an Apigee proxy named `grpc-proxy`.
-    You can include any domain name as the Target Server because you will override it with the code below.
 
-    ```xml
-    <HTTPTargetConnection>
-    <LoadBalancer>
-      <Server name="grpc-hello"/>
-    </LoadBalancer>
-    <Path>/helloworld.Greeter/SayHello</Path>
-  </HTTPTargetConnection>
-
-    ```
-
-    ```xml
-    <Authentication>
-      <GoogleIDToken>
-        <Audience>https://YOURCLOUDRUNDOMAIN</Audience>
-      </GoogleIDToken>
-    </Authentication>
-    ```
-
-15. When you deploy the proxy, you have to deploy it with a Service Account that has the Cloud Run Invoker role. 
-
-16. You also need to complete the following if you haven't done so already.
-    * Create an Internal Regional Application Load Balancer for the Cloud Run service
-    * Publish the service with PSC and use the ILB as the backend
-    * Create a Service Endpoint Attachment in Apigee and refer to the service you just published
-    * You can create a DNS entry in Cloud DNS and give it the private IP address  of the Service Endpint Attachment.
-    * Flow is Apigee Runtime -> Endpoint Point Attachment -> ILB - Cloud Run
-
-17. Test the Apigee proxy.  This assumes that you have disabled the Verify API Policy in the Preflow.
-
-```shell
-export APIGEE_GRPC_HOST=YOUR_PROXY
-grpcurl -import-path ../protos -proto helloworld.proto -d '{"name":"Guest"}' $APIGEE_GRPC_HOST:443 helloworld.Greeter/SayHello
-```
-
-### Create a new LB to accept GRPC traffic
+### Create a new Load Balancer (for Apigee) to accept gRPC traffic
+High-level outline is provided below. 
 1. Create the frontend LB with protocol HTTPS. 
 2. Create an SSL certificate
 3. Make sure to register the domain name in Cloud DNS and create an A record with the IP address of the LB.
 4. For the backend configuration make sure to select HTTP/2 for the protocol.
-5. The Host and path rules can be set to the default values.
+5. The Host and path rules can be set to the default values and should point to the Apigee Managed Instance Group (MIG).
 
+## Expose Cloud Run via a Service Attachment and Internal Regional Application Load Balancer.
+Highlevel outline of steps to expose Cloud Run to the Apigee X Runtime environment. 
+1. Create an Internal Regional Application Load Balancer (IRALB)
+2. Publish the service in Private Service Connect and use the IRALB as the backend.
 
 ## Secure the Apigee Proxy
-1. The proxy has the Verify API Key Policy requesting that the API Key is passed into the `apikey` header.
-
-2. Create an Apigee Product and Developer App.
-    * Service Name: `helloworld.Greeter`
-    * Method: `SayHello`
+More detailed steps are provided [here](../../apigee_proxies/helloworld_grpc/README.md).
 
 
-3. Test the proxy.
-```shell
-export APIGEE_GRPC_HOST=YOUR_PROXY
-export APIKEY=YOURKEY
-grpcurl -import-path ../protos -proto helloworld.proto -H "apikey: $APIKEY" -d '{"name":"Guest"}' $APIGEE_GRPC_HOST:443 helloworld.Greeter/SayHello
-```
-
-## Update the GRPC Code
-Update the GRPC code if you get warnings or errors in the Cloud Run logs stating that the version of the proto doesn't 
-match the GRPC version of the environment.
+## Update the gRPC Code
+Update the gRPC code if you get warnings or errors in the Cloud Run logs stating that the version of the proto doesn't 
+match the gRPC version of the environment.
 
 ```shell
 python -m grpc_tools.protoc -I../protos --python_out=. --pyi_out=. --grpc_python_out=. ../protos/helloworld.proto
 
 ```
+
+Once you execute this command, then you need to build the image, deploy the images to Artifactory and update the Cloud Run service. 

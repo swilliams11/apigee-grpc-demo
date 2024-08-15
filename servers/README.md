@@ -4,11 +4,11 @@ This folder currently contains only one helloworld target server that can be dep
 However, eventually it will contain other gRPC servers. 
 
 ## Servers
-The documentation shows how to build a Docker container and host in in Google Cloud Cloud Run.
+The documentation shows how to build a Docker container and host it in Google Clouds's Cloud Run environment.
 
 * [helloworld gRPC Cloud Run server](./helloworld/README.md)
 
 ## Protos
-There are only protos for the helloworld target server.  
+This folder includes the helloworld target server protos.  
 
 * Protos are included in the [protos](./protos) folder.

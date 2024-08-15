@@ -1,5 +1,15 @@
 # helloworld_grpc Apigee Proxy
 
+This documentation describes how to setup Apigee X to accept gRPC requests.
+* Create an Apigee Target Server
+* Deploy the Target Server in Apigee
+* Deploy the Apigee Proxy
+* Deploy the sample developer
+* Create an Apigee Product
+* Create an Apigee Developer App
+* Test the Apigee Proxy via the Google Cloud Load Balancer
+* Configure an Endpoint Attachment
+
 
 ## Prerequisites
 * Install [apigeecli](https://github.com/apigee/apigeecli/tree/main)
@@ -24,8 +34,16 @@ apigeecli targetservers import -o $ORG -e $ENV -f config/targetservers.json -t $
 This code will deploy the Apigee proxy. 
 
 1. You have to create an Service Account that has the Cloud Run Invoker role (use the Cloud Console to complete this).
-2. Zip the `apiproxy` folder after you update the Target Server's Authentication Audience.
-3. The Apigee X proxy name will be the name of the zip file.
+2. Zip the `apiproxy` folder **after** you update the Target Server's Authentication Audience (see below).
+   ```xml
+    <Authentication>
+      <GoogleIDToken>
+        <Audience>https://YOURCLOUDRUNDOMAIN</Audience>
+      </GoogleIDToken>
+    </Authentication>
+    ```
+
+3. The Apigee X proxy name will be the name of the zip file, so name the Zip file `grpc-proxy`.
 4. Execute the code below to import the proxy and deploy it. 
 
 ```shell
@@ -57,6 +75,17 @@ apigeecli products create -o $ORG -e $ENV -m helloworld-grpc --grpcopgrp ./confi
 ```shell
 apigeecli apps create -o $ORG -t $token -e $DEV -n grpc-app-test -p helloworld-grpc
 ```
+
+## Configure an Endpoint Attachment in Apigee
+You must configure an Endpoint Attachment in Apigee that points to the Internal Regional Application Load Balancer for the Cloud Run service. 
+
+## Create a DNS entry in Cloud Run
+* You can create a DNS entry in Cloud DNS and give it the private IP address of the Service Endpoint Attachment
+* You must also create DNS peering zone with the Google Cloud CLI so that Apigee X Runtime can resolve the DNS name.  
+
+## Update Apigee Environment Group
+Update the Apigee Environment Group to include the new gRPC domain. 
+
 
 ## Test the proxy
 ```shell
