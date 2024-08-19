@@ -1,0 +1,16 @@
+[
+{ 
+  "credentials": [
+    {
+      "apiProducts": [
+        {
+          "apiproduct": "helloworld-grpc",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "name": "helloworld-grpc-app",
+  "status": "approved"
+}
+]

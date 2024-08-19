@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.sean.grpc.examples.grpctorest";
+option java_outer_classname = "GrpcToRestProto";
+option objc_class_prefix = "HLW";
+
+package grpctorest;
+
+// The greeting service definition.
+service GrpcToRest {
+  // Sends a greeting
+  rpc Convert (GrpcToRestRequest) returns (GrpcToRestReply) {}
+
+}
+
+// The request message containing the user's name.
+message GrpcToRestRequest {
+  string fname = 1;
+  string lname = 2;
+  string city = 3;
+}
+
+// The response message containing the greetings
+message GrpcToRestReply {
+  string message = 1;
+}

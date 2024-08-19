@@ -1,0 +1,28 @@
+[
+{
+  "name": "helloworld-grpc",
+  "displayName": "helloworld-grpc",
+  "approvalType": "auto",
+  "attributes": [
+    {
+      "name": "access",
+      "value": "public"
+    }
+  ],
+  "environments": [
+    "eval"
+  ],
+  "grpcOperationGroup": {
+    "operationConfigs": [
+      {
+        "apiSource": "grpc-proxy",
+        "methods": [
+          "SayHello"
+        ],
+        "quota": {},
+        "service": "helloworld.Greeter"
+      }
+    ]
+  }
+}
+]
