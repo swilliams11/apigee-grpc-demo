@@ -1,7 +1,7 @@
 [
     {
-        "name": "grpc-hellov2",
-        "host": "grpc.helloworld.cloudrun",
+        "name": "grpctorest",
+        "host": "grpctorest.helloworld.cloudrun",
         "port": 443,
         "isEnabled": true,
         "sSLInfo": {

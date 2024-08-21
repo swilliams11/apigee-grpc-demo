@@ -1,12 +1,12 @@
 {
     "operationConfigs": [
       {
-        "apiSource": "grpc-proxy",
+        "apiSource": "grpctorest-proxy",
         "methods": [
-          "SayHello"
+          "Convert"
         ],
         "quota": {},
-        "service": "helloworld.Greeter"
+        "service": "grpctorest.GrpcToRest"
       }
     ]
   }

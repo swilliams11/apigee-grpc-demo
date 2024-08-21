@@ -1,7 +1,7 @@
 [
 {
-  "name": "helloworld-grpc",
-  "displayName": "helloworld-grpc",
+  "name": "grpctorest",
+  "displayName": "grpctorest",
   "approvalType": "auto",
   "attributes": [
     {
@@ -15,12 +15,12 @@
   "grpcOperationGroup": {
     "operationConfigs": [
       {
-        "apiSource": "grpc-proxy",
+        "apiSource": "grpctorest",
         "methods": [
-          "SayHello"
+          "Convert"
         ],
         "quota": {},
-        "service": "helloworld.Greeter"
+        "service": "grpctorest.GrpcToRest"
       }
     ]
   }

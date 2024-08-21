@@ -1,9 +1,8 @@
-[This code's documentation lives on the grpc.io site.](https://grpc.io/docs/languages/python/quickstart)
-
-
 # gRPC to REST
 This server converts a gRPC payload to REST by saving the entire gRPC payload as a single JSON
-property in the gRPC response. 
+property in the gRPC response. I originally created it so that it could be called by an Apigee X External Callout policy.  However, the External Callout policy requires that you implement a specific proto.  
+
+The only way this gRPC can be called from Apigee X is as a Target Endpoint.  
 
 ## Prerequistes
 1. Install [grpcurl](https://github.com/fullstorydev/grpcurl)

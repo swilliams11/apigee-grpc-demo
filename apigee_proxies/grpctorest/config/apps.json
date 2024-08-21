@@ -4,13 +4,13 @@
     {
       "apiProducts": [
         {
-          "apiproduct": "helloworld-grpc",
+          "apiproduct": "grpctorest",
           "status": "approved"
         }
       ]
     }
   ],
-  "name": "helloworld-grpc-app",
+  "name": "grpctorest-app",
   "status": "approved"
 }
 ]
