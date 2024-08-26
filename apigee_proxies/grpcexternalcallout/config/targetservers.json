@@ -1,0 +1,14 @@
+[
+    {
+        "name": "grpccalloutv2",
+        "host": "grpc.helloworld.cloudrun",
+        "port": 443,
+        "isEnabled": true,
+        "sSLInfo": {
+            "enabled": true,
+            "commonName": {}
+        },
+        "protocol": "GRPC"
+    }
+    
+]

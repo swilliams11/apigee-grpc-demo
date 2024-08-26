@@ -1,0 +1,12 @@
+{
+    "operationConfigs": [
+      {
+        "apiSource": "grpcexternalcallout",
+        "methods": [
+          "ProcessMessage"
+        ],
+        "quota": {},
+        "service": "apigee.ExternalCalloutService"
+      }
+    ]
+  }

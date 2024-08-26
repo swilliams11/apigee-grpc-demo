@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="default">
+  <Description/>
+  <FaultRules/>
+  <PreFlow name="PreFlow">
+    <Request/>
+    <Response/>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <Flows/>
+  <HTTPTargetConnection>
+    <Authentication>
+      <GoogleIDToken>
+        <Audience>https://YOUR_CLOUD_RUN_DOMAIN_NAME</Audience>
+      </GoogleIDToken>
+    </Authentication>
+    <LoadBalancer>
+      <Server name="grpccallout-direct"/>
+    </LoadBalancer>
+    <Path>/apigee.ExternalCalloutService/ProcessMessage</Path>
+  </HTTPTargetConnection>
+</TargetEndpoint>

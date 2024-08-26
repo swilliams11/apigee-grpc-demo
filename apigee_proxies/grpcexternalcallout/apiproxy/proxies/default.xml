@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <Description/>
+  <FaultRules/>
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>VA-VerifyAPIKey</Name>
+      </Step>
+      <Step>
+        <Name>AM-RemoveAPIKeyHeader</Name>
+      </Step>
+      <Step>
+        <Name>EC-GrpcCallout</Name>
+        <Condition>request.header.direct != "true"</Condition>
+      </Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <Flows/>
+  <HTTPProxyConnection>
+    <BasePath>/apigee.ExternalCalloutService/ProcessMessage</BasePath>
+    <Properties/>
+    <VirtualHost>default</VirtualHost>
+  </HTTPProxyConnection>
+  <RouteRule name="grpc">
+    <Condition>request.header.direct == "true"</Condition>
+    <TargetEndpoint>default</TargetEndpoint>
+  </RouteRule>
+  <RouteRule name="noroute"/>
+  <!--RouteRule name="default">
+  <TargetEndpoint>default</TargetEndpoint>
+</RouteRule-->
+</ProxyEndpoint>

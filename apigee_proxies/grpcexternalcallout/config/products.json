@@ -1,0 +1,28 @@
+[
+{
+  "name": "grpcexternalcallout-product",
+  "displayName": "grpcexternalcallout-product",
+  "approvalType": "auto",
+  "attributes": [
+    {
+      "name": "access",
+      "value": "public"
+    }
+  ],
+  "environments": [
+    "eval"
+  ],
+  "grpcOperationGroup": {
+    "operationConfigs": [
+      {
+        "apiSource": "grpcexternalcallout",
+        "methods": [
+          "ProcessMessage"
+        ],
+        "quota": {},
+        "service": "apigee.ExternalCalloutService"
+      }
+    ]
+  }
+}
+]

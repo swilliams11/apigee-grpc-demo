@@ -1,0 +1,16 @@
+[
+{ 
+  "credentials": [
+    {
+      "apiProducts": [
+        {
+          "apiproduct": "grpexternalcallout-product",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "name": "grpcexternalcallout-app",
+  "status": "approved"
+}
+]
