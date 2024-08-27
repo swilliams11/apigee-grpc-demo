@@ -4,8 +4,8 @@ from __future__ import print_function
 
 import logging
 
-import grpc
-import external_callout_pb2
+import grpc 
+from external_callout_pb2 import FlowVariable, MessageContext
 import external_callout_pb2_grpc
 
 
@@ -16,8 +16,11 @@ def run():
     print("Will try to greet world ...")
     with grpc.insecure_channel("localhost:50051") as channel:
         stub = external_callout_pb2_grpc.ExternalCalloutServiceStub(channel)
-        response = stub.ProcessMessage(external_callout_pb2.MessageContext(organization_name="HelloWorld"))
+        hellow_flow_var = FlowVariable(string="Hellow")
+        response: MessageContext = stub.ProcessMessage(MessageContext(organization_name="HelloWorld", additional_flow_variables={"myflow.param": hellow_flow_var}))
     print("External Callout client received: " + response.organization_name)
+
+    print(f"\nMessageContext:\n{response}")
 
 
 if __name__ == "__main__":
