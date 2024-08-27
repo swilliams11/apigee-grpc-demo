@@ -1,6 +1,6 @@
 # Apigee X External Callout policy
-This server implements the External Callout policy proto in Python.  
-Apigee X's [External Callout proto](https://github.com/apigee/external-callout/blob/main/server-stubs/java/src/main/proto/external_callout.proto).
+This server implements Apigee X's External Callout policy proto in Python.  
+View Apigee X's [External Callout proto defined here.](https://github.com/apigee/external-callout/blob/main/server-stubs/java/src/main/proto/external_callout.proto).
 
 
 ## Prerequistes
@@ -20,7 +20,7 @@ python -m grpc_tools.protoc -I ./servers/protos --python_out=./servers/external_
 Once you execute this command, then you need to build the image, deploy the images to Artifactory and update the Cloud Run service. 
 
 ## External Callout Proto
-Review Apigee X's [External Callout proto](https://github.com/apigee/external-callout/blob/main/server-stubs/java/src/main/proto/external_callout.proto) file to see how the MessageContext is formatted.  The [External Callout](https://cloud.google.com/apigee/docs/api-platform/reference/policies/external-callout-policy) sends a MessageContext to the gRPC server and expects a MessageContext to be returned from the server.
+Review Apigee X's [External Callout proto](https://github.com/apigee/external-callout/blob/main/server-stubs/java/src/main/proto/external_callout.proto) file to see how the MessageContext is formatted.  The [External Callout policy](https://cloud.google.com/apigee/docs/api-platform/reference/policies/external-callout-policy) sends a MessageContext to the gRPC server and expects a MessageContext to be returned from the server.  You can make changes to the headers and flow variables that are passed into the MessageContext and the Example Python gRPC code demonstrates how to do this. 
 
 ## Run in Container Locally
 ### Build the Docker Image
@@ -39,8 +39,6 @@ docker run -p 8080:50051 -d $DOCKER_IMAGE
 Execute this from the `servers` directory.
 
 ```shell
-cd servers
-
 grpcurl -plaintext -import-path servers/protos -proto servers/protos/external_callout.proto \
 -d '{"organization_name":"My Org", "request": {"uri":"/hello", "verb":"POST"}' \
 localhost:8080 apigee.ExternalCallout/ProcessMessage
@@ -55,22 +53,37 @@ pip3 install -r ./servers/external_callout/requirements.txt
 
 ```
 
-Run the server locally.
+Run the server locally with Python.
 ```shell
 python ./servers/external_callout/external_callout_server.py
 ```
 
-Run the client locally.
+Run the client locally with Python.
 ```shell
 python ./servers/external_callout/external_callout_client.py
 ```
 
-Test the server with grpcurl.  An example payload is shown below.
+Test the server with `grpcurl`.  An example payload is shown below.
 ```shell
 grpcurl -plaintext -import-path servers/protos -proto servers/protos/external_callout.proto \
 -d '{"organization_name":"My Org", "request": {"uri":"/hello", "verb":"POST"}, "additional_flow_variables": {"myflow.param": {"string" :" Hellow" }}}' \
 localhost:50051 apigee.ExternalCalloutService/ProcessMessage
 ```
+
+Response:
+```shell
+External Callout client received: HelloWorld
+
+MessageContext:
+organization_name: "HelloWorld"
+additional_flow_variables {
+  key: "myflow.param"
+  value {
+    string: "Hellow - MODIFIED in gRPC Server!"
+  }
+}
+```
+
 
 ## Upload Container to Google Cloud Artifactory
 1. Create an Artifact repo. If already completed this step then you don't need to execute it again. 

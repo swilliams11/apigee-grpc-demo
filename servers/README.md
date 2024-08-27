@@ -6,7 +6,9 @@ However, eventually it will contain other gRPC servers.
 ## Servers
 The documentation shows how to build a Docker container and host it in Google Clouds's Cloud Run environment.
 
-* [helloworld gRPC Cloud Run server](./helloworld/README.md)
+* [helloworld gRPC](./helloworld/README.md)
+* [gRPC to REST](./grpc_to_rest/README.md)
+* [Apigee's gRPC External Callout implementation](./external_callout/README.md)
 
 ## Protos
 This folder includes the helloworld target server protos.  
