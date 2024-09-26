@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: Helloworld gRPC Service
+  version: v1
+
+servers:
+  - url: grpc://localhost:50051 # Replace with your gRPC server address
+
+paths:
+  /helloworld.Greeter/SayHello:
+    post:
+      summary: Sends a greeting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HelloRequest'
+      responses:
+        '200':
+          description:    A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloReply'
+
+components:
+  schemas:
+    HelloRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name to greet.
+          example: "World"
+    HelloReply:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The greeting message.
+          example: "Hello, World!"
