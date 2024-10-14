@@ -1,0 +1,12 @@
+{
+    "operationConfigs": [
+      {
+        "apiSource": "grpcpythoncallout",
+        "methods": [
+          "ProcessMessage"
+        ],
+        "quota": {},
+        "service": "apigee.PythonCalloutService"
+      }
+    ]
+  }

@@ -1,0 +1,16 @@
+[
+{ 
+  "credentials": [
+    {
+      "apiProducts": [
+        {
+          "apiproduct": "grppythoncallout-product",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "name": "grpcpythoncallout-app",
+  "status": "approved"
+}
+]

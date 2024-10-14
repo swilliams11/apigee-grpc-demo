@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="grpcpythoncallout">
+  <DisplayName/>
+  <Description/>
+  <CreatedAt>1724679587180</CreatedAt>
+  <LastModifiedAt>1724679587180</LastModifiedAt>
+  <BasePaths>/apigee.PythonCalloutService/ProcessMessage</BasePaths>
+  <Policies>
+    <Policy>VA-VerifyAPIKey</Policy>
+    <Policy>PY-GrpcCallout</Policy>
+    <Policy>AM-RemoveAPIKeyHeader</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <TargetEndpoints>
+    <TargetEndpoint>default</TargetEndpoint>
+  </TargetEndpoints>
+</APIProxy>

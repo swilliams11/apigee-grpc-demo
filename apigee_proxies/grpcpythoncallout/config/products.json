@@ -1,0 +1,28 @@
+[
+{
+  "name": "grpcpythoncallout-product",
+  "displayName": "grpcpythoncallout-product",
+  "approvalType": "auto",
+  "attributes": [
+    {
+      "name": "access",
+      "value": "public"
+    }
+  ],
+  "environments": [
+    "eval"
+  ],
+  "grpcOperationGroup": {
+    "operationConfigs": [
+      {
+        "apiSource": "grpcpythoncallout",
+        "methods": [
+          "ProcessMessage"
+        ],
+        "quota": {},
+        "service": "apigee.PythonCalloutService"
+      }
+    ]
+  }
+}
+]

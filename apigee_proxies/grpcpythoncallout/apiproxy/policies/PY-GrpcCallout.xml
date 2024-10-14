@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Script name="PY-GrpcCallout">
+        <DisplayName>PY-GrpcCallout</DisplayName>
+        <IncludeURL>py://helloworld_pb2_grpc.py</IncludeURL>
+        <IncludeURL>py://helloworld_pb2.py</IncludeURL>
+        <IncludeURL>py://helloworld_pb2.pyi</IncludeURL>
+        <ResourceURL>py://grpc_callout.py</ResourceURL>
+</Script>
