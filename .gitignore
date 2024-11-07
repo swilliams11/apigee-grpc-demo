@@ -1,3 +1,5 @@
 .DS_Store
 __pycache__
 apigee_proxies/grpcpythoncallout/grpcpythoncallout.zip
+apigee_proxies/grpcjavacallout/grpcjavacallout.zip
+target/

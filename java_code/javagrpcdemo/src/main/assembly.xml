@@ -1,0 +1,33 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1
+ http://maven.apache.org/xsd/assembly-2.1.1.xsd">
+
+  <id>my-assembly</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory> 
+  <dependencySets>
+    <dependencySet>
+      <includes>
+        <include>org.json:json</include>
+        <include>io.grpc:grpc-netty-shaded</include>
+        <include>io.grpc:grpc-protobuf</include>
+        <include>io.grpc:grpc-stub</include>
+        <include>com.google.protobuf:protobuf-java</include>
+      </includes>
+      <outputDirectory>/lib</outputDirectory> 
+      <unpack>false</unpack> 
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>${project.build.directory}</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>javagrpcdemo-*-SNAPSHOT.jar</include> 
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>

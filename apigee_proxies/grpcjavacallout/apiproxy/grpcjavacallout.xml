@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<APIProxy revision="6" name="grpcexternalcallout">
+<APIProxy revision="1" name="grpcjavacallout">
   <DisplayName/>
   <Description/>
   <CreatedAt>1724679587180</CreatedAt>
   <LastModifiedAt>1724679587180</LastModifiedAt>
-  <BasePaths>/helloworld.Greeter/SayHello</BasePaths>
-  <!--BasePaths>/apigee.ExternalCalloutService/ProcessMessage</BasePaths-->
+  <BasePaths>/apigee.JavaCalloutService/ProcessMessage</BasePaths>
   <Policies>
     <Policy>VA-VerifyAPIKey</Policy>
-    <Policy>EC-GrpcCallout</Policy>
+    <Policy>JAVA-GrpcCallout</Policy>
     <Policy>AM-RemoveAPIKeyHeader</Policy>
   </Policies>
   <ProxyEndpoints>

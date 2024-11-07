@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="testng" verbose="1">
+  <test name="testng" preserve-order="true">
+    <!--
+    <classes>
+      <class name="com.apigee.callout.threats.JavaCalloutTest"/>
+    </classes>
+    -->
+    <!--
+  <groups>
+      <define name="privatemethods">
+        <include name="private"/>
+      </define>
+
+      <define name="all">
+        <include name="private"/>
+      </define>
+
+      <run>
+        <include name="all"/>
+      </run>
+  </groups>
+-->
+
+  <packages>
+     <package name="com.apigeedemo.grpc" />
+  </packages>
+
+        <!-- <classes>
+            <class name="com.apigeedemo.grpc.JavaGrpcHelloCallout" />
+        </classes> -->
+     
+    </test>
+</suite>

@@ -1,0 +1,16 @@
+[
+{ 
+  "credentials": [
+    {
+      "apiProducts": [
+        {
+          "apiproduct": "grpcjavacallout-product",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "name": "grpcjavacallout-app",
+  "status": "approved"
+}
+]

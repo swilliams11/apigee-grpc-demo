@@ -11,8 +11,7 @@
         <Name>AM-RemoveAPIKeyHeader</Name>
       </Step>
       <Step>
-        <Name>EC-GrpcCallout</Name>
-        <Condition>request.header.direct != "true"</Condition>
+        <Name>JAVA-GrpcCallout</Name>
       </Step>
     </Request>
     <Response/>
@@ -23,15 +22,11 @@
   </PostFlow>
   <Flows/>
   <HTTPProxyConnection>
-    <!--BasePath>/apigee.ExternalCalloutService/ProcessMessage</BasePath-->
     <BasePath>/helloworld.Greeter/SayHello</BasePath>
+    <!--BasePath>/apigee.JavaCalloutService/ProcessMessage</BasePath-->
     <Properties/>
     <VirtualHost>default</VirtualHost>
   </HTTPProxyConnection>
-  <RouteRule name="grpc">
-    <Condition>request.header.direct == "true"</Condition>
-    <TargetEndpoint>default</TargetEndpoint>
-  </RouteRule>
   <RouteRule name="noroute"/>
   <!--RouteRule name="default">
   <TargetEndpoint>default</TargetEndpoint>

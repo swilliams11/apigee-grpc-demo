@@ -1,0 +1,12 @@
+{
+    "operationConfigs": [
+      {
+        "apiSource": "grpcjavacallout",
+        "methods": [
+          "ProcessMessage"
+        ],
+        "quota": {},
+        "service": "apigee.JavaCalloutService"
+      }
+    ]
+  }

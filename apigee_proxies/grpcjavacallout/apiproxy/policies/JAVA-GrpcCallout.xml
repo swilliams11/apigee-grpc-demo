@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JavaCallout name="JAVA-GrpcCallout">
+        <Properties>
+                <!--Do not enter the protocol (http:// or https://), only enter the domain name-->
+                <Property name="grpc.target">grpc.helloworld.cloudrun</Property>
+        </Properties>
+        <DisplayName>JAVA-GrpcCallout</DisplayName>
+        <ClassName>com.apigeedemo.grpc.JavaGrpcHelloCallout</ClassName>
+        <ResourceURL>java://javagrpcdemo-1.9-SNAPSHOT.jar</ResourceURL>
+</JavaCallout>

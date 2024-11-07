@@ -1,0 +1,28 @@
+[
+{
+  "name": "grpcjavacallout-product",
+  "displayName": "grpcjavacallout-product",
+  "approvalType": "auto",
+  "attributes": [
+    {
+      "name": "access",
+      "value": "public"
+    }
+  ],
+  "environments": [
+    "eval"
+  ],
+  "grpcOperationGroup": {
+    "operationConfigs": [
+      {
+        "apiSource": "grpcjavacallout",
+        "methods": [
+          "ProcessMessage"
+        ],
+        "quota": {},
+        "service": "apigee.JavaCalloutService"
+      }
+    ]
+  }
+}
+]
